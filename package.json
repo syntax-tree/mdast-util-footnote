@@ -32,7 +32,7 @@
   ],
   "dependencies": {
     "mdast-util-to-markdown": "^0.3.0",
-    "micromark": "~2.8.0"
+    "micromark": "~2.9.0"
   },
   "devDependencies": {
     "mdast-util-from-markdown": "^0.6.0",
