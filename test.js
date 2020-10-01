@@ -169,7 +169,7 @@ test('mdast -> markdown', function (t) {
       {type: 'footnoteReference', identifier: 'a'},
       {extensions: [footnote.toMarkdown]}
     ),
-    '[^a]',
+    '[^a]\n',
     'should serialize a footnote reference w/ identifier'
   )
 
@@ -178,7 +178,7 @@ test('mdast -> markdown', function (t) {
       {type: 'footnoteReference', label: 'X]Y'},
       {extensions: [footnote.toMarkdown]}
     ),
-    '[^X\\]Y]',
+    '[^X\\]Y]\n',
     'should serialize a footnote reference w/ label'
   )
 
@@ -194,13 +194,13 @@ test('mdast -> markdown', function (t) {
       },
       {extensions: [footnote.toMarkdown]}
     ),
-    'a[^b]c',
+    'a[^b]c\n',
     'should serialize a footnote reference in a paragraph'
   )
 
   t.deepEqual(
     toMarkdown({type: 'footnote'}, {extensions: [footnote.toMarkdown]}),
-    '^[]',
+    '^[]\n',
     'should serialize an empty footnote'
   )
 
@@ -209,7 +209,7 @@ test('mdast -> markdown', function (t) {
       {type: 'footnote', children: [{type: 'text', value: 'asd'}]},
       {extensions: [footnote.toMarkdown]}
     ),
-    '^[asd]',
+    '^[asd]\n',
     'should serialize a footnote'
   )
 
@@ -225,7 +225,7 @@ test('mdast -> markdown', function (t) {
       },
       {extensions: [footnote.toMarkdown]}
     ),
-    'a^[b]c',
+    'a^[b]c\n',
     'should serialize a footnote in a paragraph'
   )
 
@@ -234,7 +234,7 @@ test('mdast -> markdown', function (t) {
       {type: 'footnoteDefinition', identifier: 'a'},
       {extensions: [footnote.toMarkdown]}
     ),
-    '[^a]:',
+    '[^a]:\n',
     'should serialize a footnote definition w/ identifier'
   )
 
@@ -243,7 +243,7 @@ test('mdast -> markdown', function (t) {
       {type: 'footnoteDefinition', label: 'X]Y'},
       {extensions: [footnote.toMarkdown]}
     ),
-    '[^X\\]Y]:',
+    '[^X\\]Y]:\n',
     'should serialize a footnote definition w/ label'
   )
 
@@ -259,7 +259,7 @@ test('mdast -> markdown', function (t) {
       },
       {extensions: [footnote.toMarkdown]}
     ),
-    '[^a]: b\n    c\n\n    d',
+    '[^a]: b\n    c\n\n    d\n',
     'should serialize a footnote definition w/ content'
   )
 
@@ -272,7 +272,7 @@ test('mdast -> markdown', function (t) {
       },
       {extensions: [footnote.toMarkdown]}
     ),
-    '[^a]:     b',
+    '[^a]:     b\n',
     'should serialize code in a footnote definition'
   )
 
@@ -288,7 +288,7 @@ test('mdast -> markdown', function (t) {
       },
       {extensions: [footnote.toMarkdown]}
     ),
-    '[^a]: b\n\n        c',
+    '[^a]: b\n\n        c\n',
     'should serialize code as the 2nd child in a footnote definition'
   )
 
@@ -297,7 +297,7 @@ test('mdast -> markdown', function (t) {
       {type: 'paragraph', children: [{type: 'text', value: 'b^[a]'}]},
       {extensions: [footnote.toMarkdown]}
     ),
-    'b^\\[a]',
+    'b^\\[a]\n',
     'should escape what would otherwise be an inline note'
   )
 
@@ -306,7 +306,7 @@ test('mdast -> markdown', function (t) {
       {type: 'paragraph', children: [{type: 'text', value: 'b[^a]'}]},
       {extensions: [footnote.toMarkdown]}
     ),
-    'b\\[^a]',
+    'b\\[^a]\n',
     'should escape what would otherwise be an footnote call'
   )
 
@@ -315,7 +315,7 @@ test('mdast -> markdown', function (t) {
       {type: 'paragraph', children: [{type: 'text', value: '[a]: b'}]},
       {extensions: [footnote.toMarkdown]}
     ),
-    '\\[a]: b',
+    '\\[a]: b\n',
     'should escape what would otherwise be an footnote definition'
   )
 
