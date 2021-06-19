@@ -13,8 +13,12 @@ Extension for [`mdast-util-from-markdown`][from-markdown] and/or
 When parsing (`from-markdown`), must be combined with
 [`micromark-extension-footnote`][extension].
 
-You probably shouldn’t use this package directly, but instead use
-[`remark-footnotes`][remark-footnotes] with **[remark][]**.
+## When to use this
+
+Use this if you’re dealing with the AST manually.
+It might be better to use [`remark-footnotes`][remark-footnotes] with
+**[remark][]**, which includes this but provides a nicer interface and makes it
+easier to combine with hundreds of plugins.
 
 ## Install
 
@@ -55,25 +59,25 @@ you don’t have to pick an identifier and move down to type the
 note.]
 ```
 
-And our script, `example.js`, looks as follows:
+And our module, `example.js`, looks as follows:
 
 ```js
-var fs = require('fs')
-var fromMarkdown = require('mdast-util-from-markdown')
-var toMarkdown = require('mdast-util-to-markdown')
-var syntax = require('micromark-extension-footnote')
-var footnote = require('mdast-util-footnote')
+import fs from 'node:fs'
+import {fromMarkdown} from 'mdast-util-from-markdown'
+import {toMarkdown} from 'mdast-util-to-markdown'
+import {footnote} from 'micromark-extension-footnote'
+import {footnoteFromMarkdown, footnoteToMarkdown} from 'mdast-util-footnote'
 
-var doc = fs.readFileSync('example.md')
+const doc = fs.readFileSync('example.md')
 
-var tree = fromMarkdown(doc, {
-  extensions: [syntax({inlineNotes: true})],
-  mdastExtensions: [footnote.fromMarkdown]
+const tree = fromMarkdown(doc, {
+  extensions: [footnote({inlineNotes: true})],
+  mdastExtensions: [footnoteFromMarkdown]
 })
 
 console.log(tree)
 
-var out = toMarkdown(tree, {extensions: [footnote.toMarkdown]})
+const out = toMarkdown(tree, {extensions: [footnoteToMarkdown]})
 
 console.log(out)
 ```
