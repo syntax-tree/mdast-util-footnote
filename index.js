@@ -1,4 +1,4 @@
-import normalizeIdentifier from 'micromark/dist/util/normalize-identifier.js'
+import {normalizeIdentifier} from 'micromark-util-normalize-identifier'
 import association from 'mdast-util-to-markdown/lib/util/association.js'
 import phrasing from 'mdast-util-to-markdown/lib/util/container-phrasing.js'
 import flow from 'mdast-util-to-markdown/lib/util/container-flow.js'
