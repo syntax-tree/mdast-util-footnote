@@ -44,7 +44,7 @@ function enterFootnoteDefinitionLabelString() {
 }
 
 function exitFootnoteDefinitionLabelString(token) {
-  var label = this.resume()
+  const label = this.resume()
   this.stack[this.stack.length - 1].label = label
   this.stack[this.stack.length - 1].identifier = normalizeIdentifier(
     this.sliceSerialize(token)
@@ -64,7 +64,7 @@ function enterFootnoteCallString() {
 }
 
 function exitFootnoteCallString(token) {
-  var label = this.resume()
+  const label = this.resume()
   this.stack[this.stack.length - 1].label = label
   this.stack[this.stack.length - 1].identifier = normalizeIdentifier(
     this.sliceSerialize(token)
@@ -84,9 +84,9 @@ function exitNote(token) {
 }
 
 function footnoteReference(node, _, context) {
-  var exit = context.enter('footnoteReference')
-  var subexit = context.enter('reference')
-  var reference = safe(context, association(node), {before: '^', after: ']'})
+  const exit = context.enter('footnoteReference')
+  const subexit = context.enter('reference')
+  const reference = safe(context, association(node), {before: '^', after: ']'})
   subexit()
   exit()
   return '[^' + reference + ']'
@@ -97,9 +97,9 @@ function footnoteReferencePeek() {
 }
 
 function footnote(node, _, context) {
-  var exit = context.enter('footnote')
-  var subexit = context.enter('label')
-  var value = '^[' + phrasing(node, context, {before: '[', after: ']'}) + ']'
+  const exit = context.enter('footnote')
+  const subexit = context.enter('label')
+  const value = '^[' + phrasing(node, context, {before: '[', after: ']'}) + ']'
   subexit()
   exit()
   return value
@@ -110,14 +110,12 @@ function footnotePeek() {
 }
 
 function footnoteDefinition(node, _, context) {
-  var exit = context.enter('footnoteDefinition')
-  var subexit = context.enter('label')
-  var label =
+  const exit = context.enter('footnoteDefinition')
+  const subexit = context.enter('label')
+  const label =
     '[^' + safe(context, association(node), {before: '^', after: ']'}) + ']:'
-  var value
   subexit()
-
-  value = indentLines(flow(node, context), map)
+  const value = indentLines(flow(node, context), map)
   exit()
 
   return value

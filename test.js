@@ -4,7 +4,7 @@ import toMarkdown from 'mdast-util-to-markdown'
 import footnote from 'micromark-extension-footnote'
 import {footnoteFromMarkdown, footnoteToMarkdown} from './index.js'
 
-test('markdown -> mdast', function (t) {
+test('markdown -> mdast', (t) => {
   t.deepEqual(
     fromMarkdown('[^a]: b\nc\n\n    d', {
       extensions: [footnote()],
@@ -163,7 +163,7 @@ test('markdown -> mdast', function (t) {
   t.end()
 })
 
-test('mdast -> markdown', function (t) {
+test('mdast -> markdown', (t) => {
   t.deepEqual(
     toMarkdown(
       {type: 'footnoteReference', identifier: 'a'},
