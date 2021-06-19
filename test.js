@@ -1,14 +1,14 @@
-var test = require('tape')
-var fromMarkdown = require('mdast-util-from-markdown')
-var toMarkdown = require('mdast-util-to-markdown')
-var syntax = require('micromark-extension-footnote')
-var footnote = require('.')
+import test from 'tape'
+import fromMarkdown from 'mdast-util-from-markdown'
+import toMarkdown from 'mdast-util-to-markdown'
+import footnote from 'micromark-extension-footnote'
+import {footnoteFromMarkdown, footnoteToMarkdown} from './index.js'
 
 test('markdown -> mdast', function (t) {
   t.deepEqual(
     fromMarkdown('[^a]: b\nc\n\n    d', {
-      extensions: [syntax()],
-      mdastExtensions: [footnote.fromMarkdown]
+      extensions: [footnote()],
+      mdastExtensions: [footnoteFromMarkdown]
     }),
     {
       type: 'root',
@@ -69,8 +69,8 @@ test('markdown -> mdast', function (t) {
 
   t.deepEqual(
     fromMarkdown('Call.[^a]\n[^a]: b', {
-      extensions: [syntax()],
-      mdastExtensions: [footnote.fromMarkdown]
+      extensions: [footnote()],
+      mdastExtensions: [footnoteFromMarkdown]
     }).children[0],
     {
       type: 'paragraph',
@@ -103,8 +103,8 @@ test('markdown -> mdast', function (t) {
 
   t.deepEqual(
     fromMarkdown('Note:^[inline\n*note*]', {
-      extensions: [syntax({inlineNotes: true})],
-      mdastExtensions: [footnote.fromMarkdown]
+      extensions: [footnote({inlineNotes: true})],
+      mdastExtensions: [footnoteFromMarkdown]
     }).children[0],
     {
       type: 'paragraph',
@@ -167,7 +167,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'footnoteReference', identifier: 'a'},
-      {extensions: [footnote.toMarkdown]}
+      {extensions: [footnoteToMarkdown]}
     ),
     '[^a]\n',
     'should serialize a footnote reference w/ identifier'
@@ -176,7 +176,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'footnoteReference', label: 'X]Y'},
-      {extensions: [footnote.toMarkdown]}
+      {extensions: [footnoteToMarkdown]}
     ),
     '[^X\\]Y]\n',
     'should serialize a footnote reference w/ label'
@@ -192,14 +192,14 @@ test('mdast -> markdown', function (t) {
           {type: 'text', value: 'c'}
         ]
       },
-      {extensions: [footnote.toMarkdown]}
+      {extensions: [footnoteToMarkdown]}
     ),
     'a[^b]c\n',
     'should serialize a footnote reference in a paragraph'
   )
 
   t.deepEqual(
-    toMarkdown({type: 'footnote'}, {extensions: [footnote.toMarkdown]}),
+    toMarkdown({type: 'footnote'}, {extensions: [footnoteToMarkdown]}),
     '^[]\n',
     'should serialize an empty footnote'
   )
@@ -207,7 +207,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'footnote', children: [{type: 'text', value: 'asd'}]},
-      {extensions: [footnote.toMarkdown]}
+      {extensions: [footnoteToMarkdown]}
     ),
     '^[asd]\n',
     'should serialize a footnote'
@@ -223,7 +223,7 @@ test('mdast -> markdown', function (t) {
           {type: 'text', value: 'c'}
         ]
       },
-      {extensions: [footnote.toMarkdown]}
+      {extensions: [footnoteToMarkdown]}
     ),
     'a^[b]c\n',
     'should serialize a footnote in a paragraph'
@@ -232,7 +232,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'footnoteDefinition', identifier: 'a'},
-      {extensions: [footnote.toMarkdown]}
+      {extensions: [footnoteToMarkdown]}
     ),
     '[^a]:\n',
     'should serialize a footnote definition w/ identifier'
@@ -241,7 +241,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'footnoteDefinition', label: 'X]Y'},
-      {extensions: [footnote.toMarkdown]}
+      {extensions: [footnoteToMarkdown]}
     ),
     '[^X\\]Y]:\n',
     'should serialize a footnote definition w/ label'
@@ -257,7 +257,7 @@ test('mdast -> markdown', function (t) {
           {type: 'paragraph', children: [{type: 'text', value: 'd'}]}
         ]
       },
-      {extensions: [footnote.toMarkdown]}
+      {extensions: [footnoteToMarkdown]}
     ),
     '[^a]: b\n    c\n\n    d\n',
     'should serialize a footnote definition w/ content'
@@ -270,7 +270,7 @@ test('mdast -> markdown', function (t) {
         label: 'a',
         children: [{type: 'code', value: 'b'}]
       },
-      {extensions: [footnote.toMarkdown]}
+      {extensions: [footnoteToMarkdown]}
     ),
     '[^a]:     b\n',
     'should serialize code in a footnote definition'
@@ -286,7 +286,7 @@ test('mdast -> markdown', function (t) {
           {type: 'code', value: 'c'}
         ]
       },
-      {extensions: [footnote.toMarkdown]}
+      {extensions: [footnoteToMarkdown]}
     ),
     '[^a]: b\n\n        c\n',
     'should serialize code as the 2nd child in a footnote definition'
@@ -295,7 +295,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'paragraph', children: [{type: 'text', value: 'b^[a]'}]},
-      {extensions: [footnote.toMarkdown]}
+      {extensions: [footnoteToMarkdown]}
     ),
     'b^\\[a]\n',
     'should escape what would otherwise be an inline note'
@@ -304,7 +304,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'paragraph', children: [{type: 'text', value: 'b[^a]'}]},
-      {extensions: [footnote.toMarkdown]}
+      {extensions: [footnoteToMarkdown]}
     ),
     'b\\[^a]\n',
     'should escape what would otherwise be an footnote call'
@@ -313,7 +313,7 @@ test('mdast -> markdown', function (t) {
   t.deepEqual(
     toMarkdown(
       {type: 'paragraph', children: [{type: 'text', value: '[a]: b'}]},
-      {extensions: [footnote.toMarkdown]}
+      {extensions: [footnoteToMarkdown]}
     ),
     '\\[a]: b\n',
     'should escape what would otherwise be an footnote definition'

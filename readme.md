@@ -18,6 +18,9 @@ You probably shouldn’t use this package directly, but instead use
 
 ## Install
 
+This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
+Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
+
 [npm][]:
 
 ```sh
@@ -173,13 +176,13 @@ note.]
 
 ## API
 
-### `footnote.fromMarkdown`
+This package exports the following identifier: `footnoteFromMarkdown`,
+`footnoteToMarkdown`.
+There is no default export.
 
-### `footnote.toMarkdown`
+### `footnoteFromMarkdown`
 
-> Note: the separate extensions are also available at
-> `mdast-util-footnote/from-markdown` and
-> `mdast-util-footnote/to-markdown`.
+### `footnoteToMarkdown`
 
 Support footnotes.
 These exports are extensions, respectively for
