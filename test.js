@@ -1,7 +1,7 @@
 import test from 'tape'
-import fromMarkdown from 'mdast-util-from-markdown'
-import toMarkdown from 'mdast-util-to-markdown'
-import footnote from 'micromark-extension-footnote'
+import {fromMarkdown} from 'mdast-util-from-markdown'
+import {toMarkdown} from 'mdast-util-to-markdown'
+import {footnote} from 'micromark-extension-footnote'
 import {footnoteFromMarkdown, footnoteToMarkdown} from './index.js'
 
 test('markdown -> mdast', (t) => {
