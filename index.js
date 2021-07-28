@@ -61,8 +61,11 @@ function enterFootnoteDefinitionLabelString() {
 /** @type {FromMarkdownHandle} */
 function exitFootnoteDefinitionLabelString(token) {
   const label = this.resume()
-  this.stack[this.stack.length - 1].label = label
-  this.stack[this.stack.length - 1].identifier = normalizeIdentifier(
+  const node = /** @type {FootnoteDefinition} */ (
+    this.stack[this.stack.length - 1]
+  )
+  node.label = label
+  node.identifier = normalizeIdentifier(
     this.sliceSerialize(token)
   ).toLowerCase()
 }
@@ -85,8 +88,11 @@ function enterFootnoteCallString() {
 /** @type {FromMarkdownHandle} */
 function exitFootnoteCallString(token) {
   const label = this.resume()
-  this.stack[this.stack.length - 1].label = label
-  this.stack[this.stack.length - 1].identifier = normalizeIdentifier(
+  const node = /** @type {FootnoteDefinition} */ (
+    this.stack[this.stack.length - 1]
+  )
+  node.label = label
+  node.identifier = normalizeIdentifier(
     this.sliceSerialize(token)
   ).toLowerCase()
 }

@@ -175,6 +175,7 @@ test('mdast -> markdown', (t) => {
 
   t.deepEqual(
     toMarkdown(
+      // @ts-expect-error: `identifier` missing.
       {type: 'footnoteReference', label: 'X]Y'},
       {extensions: [footnoteToMarkdown]}
     ),
@@ -188,7 +189,7 @@ test('mdast -> markdown', (t) => {
         type: 'paragraph',
         children: [
           {type: 'text', value: 'a'},
-          {type: 'footnoteReference', label: 'b'},
+          {type: 'footnoteReference', label: 'b', identifier: 'b'},
           {type: 'text', value: 'c'}
         ]
       },
@@ -199,6 +200,7 @@ test('mdast -> markdown', (t) => {
   )
 
   t.deepEqual(
+    // @ts-expect-error: `children` missing.
     toMarkdown({type: 'footnote'}, {extensions: [footnoteToMarkdown]}),
     '^[]\n',
     'should serialize an empty footnote'
@@ -231,6 +233,7 @@ test('mdast -> markdown', (t) => {
 
   t.deepEqual(
     toMarkdown(
+      // @ts-expect-error: `children` missing.
       {type: 'footnoteDefinition', identifier: 'a'},
       {extensions: [footnoteToMarkdown]}
     ),
@@ -240,6 +243,7 @@ test('mdast -> markdown', (t) => {
 
   t.deepEqual(
     toMarkdown(
+      // @ts-expect-error: `identifier` missing.
       {type: 'footnoteDefinition', label: 'X]Y'},
       {extensions: [footnoteToMarkdown]}
     ),
@@ -252,6 +256,7 @@ test('mdast -> markdown', (t) => {
       {
         type: 'footnoteDefinition',
         label: 'a',
+        identifier: 'a',
         children: [
           {type: 'paragraph', children: [{type: 'text', value: 'b\nc'}]},
           {type: 'paragraph', children: [{type: 'text', value: 'd'}]}
@@ -268,6 +273,7 @@ test('mdast -> markdown', (t) => {
       {
         type: 'footnoteDefinition',
         label: 'a',
+        identifier: 'a',
         children: [{type: 'code', value: 'b'}]
       },
       {extensions: [footnoteToMarkdown]}
@@ -281,6 +287,7 @@ test('mdast -> markdown', (t) => {
       {
         type: 'footnoteDefinition',
         label: 'a',
+        identifier: 'a',
         children: [
           {type: 'paragraph', children: [{type: 'text', value: 'b'}]},
           {type: 'code', value: 'c'}
