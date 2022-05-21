@@ -15,6 +15,7 @@ import {containerPhrasing} from 'mdast-util-to-markdown/lib/util/container-phras
 import {containerFlow} from 'mdast-util-to-markdown/lib/util/container-flow.js'
 import {indentLines} from 'mdast-util-to-markdown/lib/util/indent-lines.js'
 import {safe} from 'mdast-util-to-markdown/lib/util/safe.js'
+import {track} from 'mdast-util-to-markdown/lib/util/track.js'
 
 /** @type {FromMarkdownExtension} */
 export const footnoteFromMarkdown = {
@@ -116,13 +117,22 @@ function exitNote(token) {
  * @type {ToMarkdownHandle}
  * @param {FootnoteReference} node
  */
-function footnoteReference(node, _, context) {
+function footnoteReference(node, _, context, safeOptions) {
+  const tracker = track(safeOptions)
+  let value = tracker.move('[^')
   const exit = context.enter('footnoteReference')
   const subexit = context.enter('reference')
-  const reference = safe(context, association(node), {before: '^', after: ']'})
+  value += tracker.move(
+    safe(context, association(node), {
+      ...tracker.current(),
+      before: value,
+      after: ']'
+    })
+  )
   subexit()
   exit()
-  return '[^' + reference + ']'
+  value += tracker.move(']')
+  return value
 }
 
 /** @type {ToMarkdownHandle} */
@@ -134,13 +144,21 @@ function footnoteReferencePeek() {
  * @type {ToMarkdownHandle}
  * @param {Footnote} node
  */
-function footnote(node, _, context) {
+function footnote(node, _, context, safeOptions) {
+  const tracker = track(safeOptions)
+  let value = tracker.move('^[')
   const exit = context.enter('footnote')
   const subexit = context.enter('label')
-  const value =
-    '^[' + containerPhrasing(node, context, {before: '[', after: ']'}) + ']'
+  value += tracker.move(
+    containerPhrasing(node, context, {
+      ...tracker.current(),
+      before: value,
+      after: ']'
+    })
+  )
   subexit()
   exit()
+  value += tracker.move(']')
   return value
 }
 
@@ -153,13 +171,26 @@ function footnotePeek() {
  * @type {ToMarkdownHandle}
  * @param {FootnoteDefinition} node
  */
-function footnoteDefinition(node, _, context) {
+function footnoteDefinition(node, _, context, safeOptions) {
+  const tracker = track(safeOptions)
+  let value = tracker.move('[^')
   const exit = context.enter('footnoteDefinition')
   const subexit = context.enter('label')
-  const label =
-    '[^' + safe(context, association(node), {before: '^', after: ']'}) + ']:'
+  value += tracker.move(
+    safe(context, association(node), {
+      ...tracker.current(),
+      before: value,
+      after: ']'
+    })
+  )
   subexit()
-  const value = indentLines(containerFlow(node, context), map)
+  value += tracker.move(
+    ']:' + (node.children && node.children.length > 0 ? ' ' : '')
+  )
+  tracker.shift(4)
+  value += tracker.move(
+    indentLines(containerFlow(node, context, tracker.current()), map)
+  )
   exit()
 
   return value
@@ -170,6 +201,6 @@ function footnoteDefinition(node, _, context) {
       return (blank ? '' : '    ') + line
     }
 
-    return (blank ? label : label + ' ') + line
+    return line
   }
 }
