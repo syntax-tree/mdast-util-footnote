@@ -1,11 +1,12 @@
-import test from 'tape'
+import assert from 'node:assert/strict'
+import test from 'node:test'
 import {fromMarkdown} from 'mdast-util-from-markdown'
 import {toMarkdown} from 'mdast-util-to-markdown'
 import {footnote} from 'micromark-extension-footnote'
 import {footnoteFromMarkdown, footnoteToMarkdown} from './index.js'
 
-test('markdown -> mdast', (t) => {
-  t.deepEqual(
+test('footnoteFromMarkdown', () => {
+  assert.deepEqual(
     fromMarkdown('[^a]: b\nc\n\n    d', {
       extensions: [footnote()],
       mdastExtensions: [footnoteFromMarkdown]
@@ -67,7 +68,7 @@ test('markdown -> mdast', (t) => {
     'should support a footnote definition'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     fromMarkdown('Call.[^a]\n[^a]: b', {
       extensions: [footnote()],
       mdastExtensions: [footnoteFromMarkdown]
@@ -101,7 +102,7 @@ test('markdown -> mdast', (t) => {
     'should support a footnote call'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     fromMarkdown('Note:^[inline\n*note*]', {
       extensions: [footnote({inlineNotes: true})],
       mdastExtensions: [footnoteFromMarkdown]
@@ -159,12 +160,10 @@ test('markdown -> mdast', (t) => {
     },
     'should support a footnote call'
   )
-
-  t.end()
 })
 
-test('mdast -> markdown', (t) => {
-  t.deepEqual(
+test('footnoteToMarkdown', () => {
+  assert.deepEqual(
     toMarkdown(
       {type: 'footnoteReference', identifier: 'a'},
       {extensions: [footnoteToMarkdown]}
@@ -173,7 +172,7 @@ test('mdast -> markdown', (t) => {
     'should serialize a footnote reference w/ identifier'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       // @ts-expect-error: `identifier` missing.
       {type: 'footnoteReference', label: 'X]Y'},
@@ -183,7 +182,7 @@ test('mdast -> markdown', (t) => {
     'should serialize a footnote reference w/ label'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {
         type: 'paragraph',
@@ -199,14 +198,14 @@ test('mdast -> markdown', (t) => {
     'should serialize a footnote reference in a paragraph'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     // @ts-expect-error: `children` missing.
     toMarkdown({type: 'footnote'}, {extensions: [footnoteToMarkdown]}),
     '^[]\n',
     'should serialize an empty footnote'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {type: 'footnote', children: [{type: 'text', value: 'asd'}]},
       {extensions: [footnoteToMarkdown]}
@@ -215,7 +214,7 @@ test('mdast -> markdown', (t) => {
     'should serialize a footnote'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {
         type: 'paragraph',
@@ -231,7 +230,7 @@ test('mdast -> markdown', (t) => {
     'should serialize a footnote in a paragraph'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       // @ts-expect-error: `children` missing.
       {type: 'footnoteDefinition', identifier: 'a'},
@@ -241,7 +240,7 @@ test('mdast -> markdown', (t) => {
     'should serialize a footnote definition w/ identifier'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       // @ts-expect-error: `identifier` missing.
       {type: 'footnoteDefinition', label: 'X]Y'},
@@ -251,7 +250,7 @@ test('mdast -> markdown', (t) => {
     'should serialize a footnote definition w/ label'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {
         type: 'footnoteDefinition',
@@ -268,7 +267,7 @@ test('mdast -> markdown', (t) => {
     'should serialize a footnote definition w/ content'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {
         type: 'footnoteDefinition',
@@ -282,7 +281,7 @@ test('mdast -> markdown', (t) => {
     'should serialize code in a footnote definition'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {
         type: 'footnoteDefinition',
@@ -299,7 +298,7 @@ test('mdast -> markdown', (t) => {
     'should serialize code as the 2nd child in a footnote definition'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {type: 'paragraph', children: [{type: 'text', value: 'b^[a]'}]},
       {extensions: [footnoteToMarkdown]}
@@ -308,7 +307,7 @@ test('mdast -> markdown', (t) => {
     'should escape what would otherwise be an inline note'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {type: 'paragraph', children: [{type: 'text', value: 'b[^a]'}]},
       {extensions: [footnoteToMarkdown]}
@@ -317,7 +316,7 @@ test('mdast -> markdown', (t) => {
     'should escape what would otherwise be an footnote call'
   )
 
-  t.deepEqual(
+  assert.deepEqual(
     toMarkdown(
       {type: 'paragraph', children: [{type: 'text', value: '[a]: b'}]},
       {extensions: [footnoteToMarkdown]}
@@ -325,6 +324,4 @@ test('mdast -> markdown', (t) => {
     '\\[a]: b\n',
     'should escape what would otherwise be an footnote definition'
   )
-
-  t.end()
 })
