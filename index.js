@@ -3,6 +3,7 @@
  * @typedef {import('mdast').FootnoteReference} FootnoteReference
  * @typedef {import('mdast').FootnoteDefinition} FootnoteDefinition
  * @typedef {import('mdast-util-from-markdown').Extension} FromMarkdownExtension
+ * @typedef {import('mdast-util-from-markdown').CompileContext} CompileContext
  * @typedef {import('mdast-util-from-markdown').Handle} FromMarkdownHandle
  * @typedef {import('mdast-util-to-markdown').Options} ToMarkdownExtension
  * @typedef {import('mdast-util-to-markdown').Handle} ToMarkdownHandle
@@ -46,7 +47,10 @@ export const footnoteToMarkdown = {
 footnoteReference.peek = footnoteReferencePeek
 footnote.peek = footnotePeek
 
-/** @type {FromMarkdownHandle} */
+/**
+ * @this {CompileContext}
+ * @type {FromMarkdownHandle}
+ */
 function enterFootnoteDefinition(token) {
   this.enter(
     {type: 'footnoteDefinition', identifier: '', label: '', children: []},
@@ -54,12 +58,18 @@ function enterFootnoteDefinition(token) {
   )
 }
 
-/** @type {FromMarkdownHandle} */
+/**
+ * @this {CompileContext}
+ * @type {FromMarkdownHandle}
+ */
 function enterFootnoteDefinitionLabelString() {
   this.buffer()
 }
 
-/** @type {FromMarkdownHandle} */
+/**
+ * @this {CompileContext}
+ * @type {FromMarkdownHandle}
+ */
 function exitFootnoteDefinitionLabelString(token) {
   const label = this.resume()
   const node = /** @type {FootnoteDefinition} */ (
@@ -71,22 +81,34 @@ function exitFootnoteDefinitionLabelString(token) {
   ).toLowerCase()
 }
 
-/** @type {FromMarkdownHandle} */
+/**
+ * @this {CompileContext}
+ * @type {FromMarkdownHandle}
+ */
 function exitFootnoteDefinition(token) {
   this.exit(token)
 }
 
-/** @type {FromMarkdownHandle} */
+/**
+ * @this {CompileContext}
+ * @type {FromMarkdownHandle}
+ */
 function enterFootnoteCall(token) {
   this.enter({type: 'footnoteReference', identifier: '', label: ''}, token)
 }
 
-/** @type {FromMarkdownHandle} */
+/**
+ * @this {CompileContext}
+ * @type {FromMarkdownHandle}
+ */
 function enterFootnoteCallString() {
   this.buffer()
 }
 
-/** @type {FromMarkdownHandle} */
+/**
+ * @this {CompileContext}
+ * @type {FromMarkdownHandle}
+ */
 function exitFootnoteCallString(token) {
   const label = this.resume()
   const node = /** @type {FootnoteDefinition} */ (
@@ -98,17 +120,26 @@ function exitFootnoteCallString(token) {
   ).toLowerCase()
 }
 
-/** @type {FromMarkdownHandle} */
+/**
+ * @this {CompileContext}
+ * @type {FromMarkdownHandle}
+ */
 function exitFootnoteCall(token) {
   this.exit(token)
 }
 
-/** @type {FromMarkdownHandle} */
+/**
+ * @this {CompileContext}
+ * @type {FromMarkdownHandle}
+ */
 function enterNote(token) {
   this.enter({type: 'footnote', children: []}, token)
 }
 
-/** @type {FromMarkdownHandle} */
+/**
+ * @this {CompileContext}
+ * @type {FromMarkdownHandle}
+ */
 function exitNote(token) {
   this.exit(token)
 }
