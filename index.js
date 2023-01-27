@@ -151,6 +151,7 @@ function exitNote(token) {
 function footnoteReference(node, _, context, safeOptions) {
   const tracker = track(safeOptions)
   let value = tracker.move('[^')
+  // @ts-expect-error: To do: use `ConstructNameMap`.
   const exit = context.enter('footnoteReference')
   const subexit = context.enter('reference')
   value += tracker.move(
@@ -178,6 +179,7 @@ function footnoteReferencePeek() {
 function footnote(node, _, context, safeOptions) {
   const tracker = track(safeOptions)
   let value = tracker.move('^[')
+  // @ts-expect-error: To do: use `ConstructNameMap`.
   const exit = context.enter('footnote')
   const subexit = context.enter('label')
   value += tracker.move(
@@ -205,6 +207,7 @@ function footnotePeek() {
 function footnoteDefinition(node, _, context, safeOptions) {
   const tracker = track(safeOptions)
   let value = tracker.move('[^')
+  // @ts-expect-error: To do: use `ConstructNameMap`.
   const exit = context.enter('footnoteDefinition')
   const subexit = context.enter('label')
   value += tracker.move(
